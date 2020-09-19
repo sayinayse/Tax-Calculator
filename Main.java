@@ -3,13 +3,6 @@ import java.io.FileNotFoundException;  // Import this class to handle errors
 import java.util.Scanner; // Import the Scanner class to read text files
 import java.util.ArrayList;
 
-enum Type{
-	BOOK,
-	FOOD,
-	MEDICAL,
-	OTHER;
-}
-
 class Item{
 	private String name;
 	private double price;
@@ -18,9 +11,8 @@ class Item{
 	private boolean isExempted;
 	private boolean isImported;
 	
-	public Item(int quantity, String name, double price, Type itemType){
+	public Item(int quantity, String name, double price){
 		this.name = name;
-		this.type = itemType;
 		this.setPrice(price);
 		this.setQuantity(quantity);
 		this.setIsExempted();
@@ -56,7 +48,7 @@ class Item{
 	}
 	
 	public void setIsExempted(){
-		if(this.getName().contains("book") || this.getName().contains("phill") || this.getName().contains("chocolate")){
+		if(this.getName().contains("book") || this.getName().contains("pill") || this.getName().contains("chocolate")){
 			this.isExempted = true;
 		}
 		else{
@@ -64,7 +56,6 @@ class Item{
 		}
 		
 	}
-	
 	
 	public boolean getIsImported(){
 		return isImported;
@@ -81,13 +72,17 @@ class Item{
 	}
 	
 	public void printItem(){
-		System.out.println("Quantity: " + this.getQuantity() + " Item: " + this.getName() + " Price: " + this.getPrice());
+		System.out.println("Quantity: " + this.getQuantity() + 
+							" Item: " + this.getName() + 
+							" Price: " + this.getPrice());
 	}
 	
 }
 
 class Receipt{
 	private double total;
+	private double taxAmount = 0;
+	private double totalSale = 0;
 	
 	public double getTotal(){
 		return total;
@@ -97,40 +92,63 @@ class Receipt{
 		this.total = totalPrice;
 	}
 	
-	public void calculateTax(ArrayList<Item> itemList){
+	public double getTaxAmount(){
+		return taxAmount;
+	}
+	
+	public void calculatePrintReceipt(ArrayList<Item> itemList){
 		for(int i = 0; i < itemList.size(); i++)
 		{	
 			if(itemList.get(i).getIsExempted() && itemList.get(i).getIsImported() != true){
+				
 				this.setTotal(itemList.get(i).getPrice());
-				System.out.println("Quantity: " + itemList.get(i).getQuantity() + " Item: " + itemList.get(i).getName() + " Total Price: " + this.getTotal());
+				totalSale += this.getTotal();
+				
+				System.out.println(itemList.get(i).getQuantity() +
+									" " + itemList.get(i).getName() + 
+									": " + this.getTotal());
 			}
 			
 			if(itemList.get(i).getIsExempted() && itemList.get(i).getIsImported()){
+				
+				taxAmount += (itemList.get(i).getPrice() * 0.05);
 				this.setTotal(itemList.get(i).getPrice() + (itemList.get(i).getPrice() * 0.05));	
-				System.out.println("Quantity: " + itemList.get(i).getQuantity() + " Item: " + itemList.get(i).getName() + " Total Price: " + this.getTotal());
+				totalSale += this.getTotal();
+				
+				System.out.println(itemList.get(i).getQuantity() +
+									" " + itemList.get(i).getName() + 
+									": " + this.getTotal());
 			}
 			
 			if(itemList.get(i).getIsExempted() != true && itemList.get(i).getIsImported()){
+				
+				taxAmount += (itemList.get(i).getPrice() * 0.15);
 				this.setTotal(itemList.get(i).getPrice() + (itemList.get(i).getPrice() * 0.15));
-				System.out.println("Quantity: " + itemList.get(i).getQuantity() + " Item: " + itemList.get(i).getName() + " Total Price: " + this.getTotal());
+				totalSale += this.getTotal();
+				
+				System.out.println(itemList.get(i).getQuantity() + 
+									" " + itemList.get(i).getName() + 
+									" : " + this.getTotal());
 			}
 			
 			if(itemList.get(i).getIsExempted() != true && itemList.get(i).getIsImported() != true){
+				
+				taxAmount += (itemList.get(i).getPrice() * 0.10);
 				this.setTotal(itemList.get(i).getPrice() + (itemList.get(i).getPrice() * 0.10));
-				System.out.println("Quantity: " + itemList.get(i).getQuantity() + " Item: " + itemList.get(i).getName() + " Total Price: " + this.getTotal());
+				totalSale += this.getTotal();
+				
+				System.out.println(itemList.get(i).getQuantity() +
+									" " + itemList.get(i).getName() + 
+									": " + this.getTotal());
 			}
 			
+			
 		}
-		
+		System.out.println(" ");
+		System.out.println("Tax Amount: " + taxAmount);
+		System.out.println("Total Sale: " + totalSale);
 	}
 	
-	/*public void printReceipt(ArrayList<Item> itemList){
-		for(int i = 0; i < itemList.size(); i++)
-		{
-			System.out.println("Quantity: " + itemList.get(i).getQuantity() + " Item: " + itemList.get(i).getName() + " Total Price: " + this.getTotal(itemList.get(i).getPrice()));
-		}
-	
-	}*/
 }
 
 
@@ -152,10 +170,9 @@ public class Main{
 		int quantity = Integer.parseInt(words[0]); //first one is quantity
 		String name = words[1];
 		float price = Float.parseFloat(words[3]);
-		Item item = new Item(quantity, name, price, Type.OTHER); //şimdilik TYPE koydum. kaldır bunu.
+		Item item = new Item(quantity, name, price); 
 		itemList.add(item);	
         
-        //System.out.println(line);
       }
       listOfItemList.add(itemList);
       input.close();
@@ -173,10 +190,9 @@ public class Main{
 		int quantity = Integer.parseInt(words[0]); //first one is quantity
 		String name = words[1];
 		float price = Float.parseFloat(words[3]);
-		Item item = new Item(quantity, name, price, Type.OTHER); //şimdilik TYPE koydum. kaldır bunu.
+		Item item = new Item(quantity, name, price); 
 		itemList1.add(item);	
-        
-        //System.out.println(line);
+
       }
       listOfItemList.add(itemList1);
       input.close();
@@ -194,10 +210,9 @@ public class Main{
 		int quantity = Integer.parseInt(words[0]); //first one is quantity
 		String name = words[1];
 		float price = Float.parseFloat(words[3]);
-		Item item = new Item(quantity, name, price, Type.OTHER); //şimdilik TYPE koydum. kaldır bunu.
+		Item item = new Item(quantity, name, price); 
 		itemList2.add(item);	
-        
-        //System.out.println(line);
+   
       }
       listOfItemList.add(itemList2);
       input.close();
@@ -206,42 +221,15 @@ public class Main{
       e.printStackTrace();
     }
 		
-	
-		/*for(int i = 0; i < listOfItemList.size(); i++)
-		{
-			for(int j = 0; j < listOfItemList.get(i).size(); j++)
-			{
-				listOfItemList.get(i).get(j).printItem();
-			}
-			System.out.println("**");
-		}*/
-		
 		for(int i = 0; i < listOfItemList.size(); i++)
 		{
+			System.out.println("Receipt " + (i + 1));
 			Receipt receipt = new Receipt();
-			receipt.calculateTax(listOfItemList.get(i));
-			//receipt.printReceipt(listOfItemList.get(i));
-			System.out.println("****");
+			receipt.calculatePrintReceipt(listOfItemList.get(i));
+			System.out.println("**End of the Receipt " + (i + 1) + "**");
+			System.out.println(" ");
 		}
 	
-	/*
-		Item item1 = new Item(1, "book", 12.49, Type.BOOK);
-		Item item2 = new Item(1, "music CD", 14.99 ,Type.OTHER);
-		//item1.printItem();
-	
-	
-		Receipt receipt1 = new Receipt();
-		receipt1.calculateTax(item1);
-		System.out.println(receipt1.getTotal());
-		
-		Receipt receipt2 = new Receipt();
-		receipt2.calculateTax(item2);
-		System.out.println(receipt2.getTotal());
-		*/
-	
-	
 	}
-
-
 
 }
