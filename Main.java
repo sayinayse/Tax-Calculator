@@ -191,8 +191,6 @@ public class Main{
 	 * ItemLists are used to keep items in a receipt.
 	 */
 	ArrayList<Item> itemList = new ArrayList<Item>(); 	
-	ArrayList<Item> itemList1 = new ArrayList<Item>();
-	ArrayList<Item> itemList2 = new ArrayList<Item>();
 	ArrayList<ArrayList<Item>> listOfItemList = new ArrayList<ArrayList<Item>>();
 		
 	try {
@@ -218,52 +216,6 @@ public class Main{
       e.printStackTrace();
     }
     
-    try {
-		/*
-		 * Text file is read for receipt 2. Items are created in here.
-		 */
-		File file = new File("test2.txt");
-		Scanner input = new Scanner(file);
-		while (input.hasNextLine()) {
-			String line = input.nextLine();  //Take the line.
-			String[] words = line.split(" "); //Split lines into words.
-			int quantity = Integer.parseInt(words[0]); //First word is quantity of the item.
-			String name = words[1];						//Second word is name of the item.
-			String price = words[3];	//Third one is price of the item.
-			BigDecimal bigDecPrice = new BigDecimal(price);
-			Item item = new Item(quantity, name, bigDecPrice); //Item is created and then added to related itemList.
-			itemList1.add(item);	
-		  }
-		listOfItemList.add(itemList1);	//itemList of receipt 2 is added to the list of itemLists. 
-		input.close();
-	} catch (FileNotFoundException e) {
-      System.out.println("An error occurred while reading the file.");
-      e.printStackTrace();
-    }
-		
-	try {
-		/*
-		 * Text file is read for receipt 3. Items are created in here.
-		 */
-		File file = new File("test3.txt");
-		Scanner input = new Scanner(file);
-		while (input.hasNextLine()) {
-			String line = input.nextLine();  //Take the line.
-			String[] words = line.split(" "); //Split lines into words.
-			int quantity = Integer.parseInt(words[0]); //First word is quantity of the item.
-			String name = words[1];						//Second word is name of the item.
-			String price = words[3];	//Third one is price of the item.
-			BigDecimal bigDecPrice = new BigDecimal(price);
-			Item item = new Item(quantity, name, bigDecPrice); //Item is created and then added to related itemList.
-			itemList2.add(item);	
-	   
-		  }
-		listOfItemList.add(itemList2);	//itemList of receipt 3 is added to the list of itemLists. 
-		input.close();
-    } catch (FileNotFoundException e) {
-      System.out.println("An error occurred while reading the file.");
-      e.printStackTrace();
-    }
 		
 		//Total tax amount, total sale amount are calculated for every receipt.
 		//Then output is displayed on the screen.
